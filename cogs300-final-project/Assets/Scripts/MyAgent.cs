@@ -118,7 +118,7 @@ public class MyAgent : CogsAgent
     {
         base.OnCollisionEnter(collision);
 
-
+        //target is not in my base and is not being carried and I am not frozen
         if (collision.gameObject.CompareTag("Target") && collision.gameObject.GetComponent<Target>().GetInBase() != GetTeam() && collision.gameObject.GetComponent<Target>().GetCarried() == 0 && !IsFrozen())
         {
             SetReward(0.5f);
@@ -146,6 +146,8 @@ public class MyAgent : CogsAgent
 
         switch (forwardAxis)
         {
+            case 0: //do nothing
+                break;
             case 1:
                 dirToGo = transform.forward;
                 break;
@@ -155,6 +157,8 @@ public class MyAgent : CogsAgent
         }
         switch (rotateAxis)
         {
+            case 0: //do nothing
+                break;
             case 1:
                 rotateDir = -transform.up;
                 break;
@@ -166,6 +170,8 @@ public class MyAgent : CogsAgent
 
         switch (shootAxis)
         {
+            case 0: //do nothing
+                break;
             case 1:
                 SetLaser(true);
                 break;
@@ -173,6 +179,8 @@ public class MyAgent : CogsAgent
         
          switch (goToTargetAxis)
         {
+             case 0: //do nothing
+                break;
             case 1:
                 goToNearestTarget();
                 break;
@@ -180,6 +188,8 @@ public class MyAgent : CogsAgent
 
          switch (goToBaseAxis)
         {
+             case 0: //do nothing
+                break;
             case 1:
                 goToBase();
                 break;

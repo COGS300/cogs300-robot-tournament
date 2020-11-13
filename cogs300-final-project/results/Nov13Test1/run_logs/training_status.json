@@ -2,17 +2,17 @@
     "Agent": {
         "checkpoints": [
             {
-                "steps": 34351,
-                "file_path": "results\\Nov13Test1\\Agent\\Agent-34351.nn",
-                "reward": -5.506749926134944,
-                "creation_time": 1605288899.7074041
+                "steps": 832,
+                "file_path": "results\\Nov13Test1\\Agent\\Agent-832.nn",
+                "reward": null,
+                "creation_time": 1605291858.8118012
             }
         ],
         "final_checkpoint": {
-            "steps": 34351,
+            "steps": 832,
             "file_path": "results\\Nov13Test1\\Agent.nn",
-            "reward": -5.506749926134944,
-            "creation_time": 1605288899.7074041
+            "reward": null,
+            "creation_time": 1605291858.8118012
         }
     },
     "metadata": {
