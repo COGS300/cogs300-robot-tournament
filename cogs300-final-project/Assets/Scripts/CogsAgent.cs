@@ -18,7 +18,7 @@ public class CogsAgent : Agent
     protected Transform baseLocation;  
     
     protected GameObject[] targets;
-    public List<GameObject> capturedTargets;
+    //public List<GameObject> capturedTargets;
     protected List<GameObject> carriedTargets;
 
     protected Vector3 dirToGo, rotateDir;
@@ -29,8 +29,11 @@ public class CogsAgent : Agent
 
     private const float m_LaserLength = 20;
     private GameObject myLaser;
-    private bool m_Shoot, frozen;
-    private float frozenTime, moveSpeed, turnSpeed;
+    private bool m_Shoot, frozen, invincible;
+    private float frozenTime,invinceTime, moveSpeed, turnSpeed;
+
+    private static float frozenDuration = 3f;
+    private static float invinceDuration = frozenDuration + 1f;
 
     protected Dictionary<string, float> rewardDict;
 
@@ -50,9 +53,10 @@ public class CogsAgent : Agent
         {
             transform.rotation = Quaternion.Euler(new Vector3(0f, 50f, 0f));
         }
-        capturedTargets.Clear();
+        //capturedTargets.Clear();
         carriedTargets.Clear();
         frozen = false;
+        invincible = false;
 
         transform.localPosition = new Vector3(baseLocation.localPosition.x, 0.5f, baseLocation.localPosition.z);
         // foreach (GameObject target in targets)
@@ -69,16 +73,18 @@ public class CogsAgent : Agent
     
     private void Freeze() {
         if (rewardDict.ContainsKey("frozen")) AddReward(rewardDict["frozen"]);
-        frozen = true;
-        frozenTime = Time.time;
+        if (!invincible){
+            frozen = true;
+            invincible = true;
+            frozenTime = Time.time;
+            invinceTime = Time.time;
+        }
     }
     private void DropCarrying() {
         for (int i = carriedTargets.Count - 1; i > -1; i--)
             {
                 GameObject currentTarget = carriedTargets[i];
-                currentTarget.GetComponent<Target>().Carry(0);
-                currentTarget.GetComponent<Target>().setMass(1);
-                currentTarget.GetComponent<Target>().explode();
+                currentTarget.GetComponent<Target>().Explode();
                 carriedTargets.Remove(currentTarget);
 
             }
@@ -115,7 +121,7 @@ public class CogsAgent : Agent
 
         dirToGo = Vector3.zero;
         rotateDir = Vector3.zero;
-        capturedTargets = new List<GameObject>();
+        //capturedTargets = new List<GameObject>();
         carriedTargets = new List<GameObject>();
 
         Material mat;
@@ -141,9 +147,22 @@ public class CogsAgent : Agent
 
         }
 
-        if (Time.time > frozenTime + 4f && frozen)
+        if (Time.time > frozenTime + frozenDuration && frozen)
         {
             frozen = false;
+        }
+        if (Time.time > invinceTime + invinceDuration && invincible){
+            invincible = false;
+        }
+
+        int numCarry = 0;
+        float xCo = this.transform.localPosition.x;
+        float zCo = this.transform.localPosition.z;
+        foreach (GameObject target in carriedTargets)
+        {
+            numCarry++;
+            //target.GetComponent<Target>().SetYPos(numCarry * 1.2f);
+            target.transform.localPosition = new Vector3(xCo, numCarry * 1.2f, zCo);
         }
     }
     
@@ -151,34 +170,32 @@ public class CogsAgent : Agent
     {
         //If I collide with a target which is not in my own base
         
-        if (collision.gameObject.CompareTag("HomeBase") && collision.gameObject.GetComponent<HomeBase>().team == team)
-        {
-            for (int i = carriedTargets.Count - 1; i > -1; i--)
-            {
-                GameObject currentTarget = carriedTargets[i];
-                //AddReward(0.1f);
-                capturedTargets.Add(currentTarget);
-                int spot = myBase.GetComponent<HomeBase>().addToFirstSpotInBase();
-                Vector3 position = myBase.GetComponent<HomeBase>().getPosition(spot);
-                currentTarget.GetComponent<Target>().addToBase(spot, team, position);
-                currentTarget.GetComponent<Target>().zeroRotation();
-                carriedTargets.Remove(currentTarget);
+        // if (collision.gameObject.CompareTag("HomeBase") && collision.gameObject.GetComponent<HomeBase>().team == team)
+        // {
+        //     for (int i = carriedTargets.Count - 1; i > -1; i--)
+        //     {
+        //         GameObject currentTarget = carriedTargets[i];
+        //         //AddReward(0.1f);
+        //         capturedTargets.Add(currentTarget);
+        //         int spot = myBase.GetComponent<HomeBase>().addToFirstSpotInBase();
+        //         Vector3 position = myBase.GetComponent<HomeBase>().getPosition(spot);
+        //         currentTarget.GetComponent<Target>().addToBase(spot, team, position);
+        //         currentTarget.GetComponent<Target>().zeroRotation();
+        //         carriedTargets.Remove(currentTarget);
 
-            }
-            collision.gameObject.GetComponent<HomeBase>().numInBase = capturedTargets.Count;
-        }
+        //     }
+        //     collision.gameObject.GetComponent<HomeBase>().numInBase = capturedTargets.Count;
+        // }
     }
 
     // check collisions for walls and add a small negative reward
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Target") && collision.gameObject.GetComponent<Target>().inBase != team && collision.gameObject.GetComponent<Target>().carried == 0 && !frozen)
+        if (collision.gameObject.CompareTag("Target") && collision.gameObject.GetComponent<Target>().GetInBase() != team && collision.gameObject.GetComponent<Target>().GetCarried() == 0 && !frozen)
         {
             //SetReward(0.5f);
             //carrying++;
-            collision.gameObject.GetComponent<Target>().setMass(0);
             collision.gameObject.GetComponent<Target>().Carry(team);
-            collision.gameObject.GetComponent<Target>().zeroRotation();
 
             
             carriedTargets.Add(collision.gameObject);
@@ -210,13 +227,13 @@ public class CogsAgent : Agent
             //AddReward(-0.05f);
             if (rewardDict.ContainsKey("shooting-laser")) AddReward(rewardDict["shooting-laser"]);
             var myTransform = transform;
-            myLaser.transform.localPosition = new Vector3(0f,0f,(m_LaserLength / 2f) + 0.5f);
-            myLaser.transform.localScale = new Vector3(1f, 1f, m_LaserLength);
-            var rayDir = 25.0f * myTransform.forward;
+            var rayDir = m_LaserLength * myTransform.forward;
             Debug.DrawRay(myTransform.position, rayDir, Color.red, 0f, true);
             RaycastHit hit;
-            if (Physics.SphereCast(transform.position, 2f, rayDir, out hit, m_LaserLength))
+            float laserHitDistance = m_LaserLength;
+            if (Physics.SphereCast(transform.position, 0.25f, rayDir, out hit, m_LaserLength,1, QueryTriggerInteraction.Ignore))
             {
+                laserHitDistance = hit.distance;
                 if (hit.collider.gameObject.CompareTag("Player"))
                 {
                     if (rewardDict.ContainsKey("hit-enemy")) AddReward(rewardDict["hit-enemy"]);
@@ -224,6 +241,8 @@ public class CogsAgent : Agent
                     hit.collider.gameObject.GetComponent<CogsAgent>().Freeze();
                 }
             }
+            myLaser.transform.localPosition = new Vector3(0f,0f,(laserHitDistance / 2f) + 0.5f);
+            myLaser.transform.localScale = new Vector3(1f, 1f, laserHitDistance);
             return true;
         }
         else
@@ -241,7 +260,7 @@ public class CogsAgent : Agent
         foreach (var target in targets)
         {
             float currentDistance = Vector3.Distance(target.transform.localPosition, transform.localPosition);
-            if (currentDistance < distance && target.GetComponent<Target>().carried == 0 && target.GetComponent<Target>().inBase != team){
+            if (currentDistance < distance && target.GetComponent<Target>().GetCarried() == 0 && target.GetComponent<Target>().GetInBase() != team){
                 distance = currentDistance;
                 nearestTarget = target;
             }
@@ -258,11 +277,19 @@ public class CogsAgent : Agent
     public bool IsLaserOn() {return m_Shoot;}
     public bool IsFrozen() {return frozen;}
     public float GetFrozenTime() {return frozenTime;}
-    public int GetCaptured() {return capturedTargets.Count;}
+    //public int GetCaptured() {return capturedTargets.Count;}
     public int GetCarrying() {return carriedTargets.Count;}
     public float DistanceToBase(){return Vector3.Distance(myBase.transform.localPosition, transform.localPosition);}
 
+    public GameObject GetCarry(int i){
+        return carriedTargets[i];
+    }
+
     // --------------SETTERS----------------
     protected void SetLaser(bool on) {m_Shoot = on;}
+
+    public void RemoveCarry(GameObject target){
+        carriedTargets.Remove(target);
+    }
     
 }

@@ -33,8 +33,8 @@ public class FinalStageManager : MonoBehaviour
     { 
         bool timerIsRunning = timer.GetComponent<Timer>().GetTimerIsRunning();
         
-        int base1Num = agent1.GetComponent<MyAgent>().GetCaptured();
-        int base2Num = agent2.GetComponent<MyAgent>().GetCaptured();
+        int base1Num = base1.GetComponent<HomeBase>().GetCaptured();
+        int base2Num = base2.GetComponent<HomeBase>().GetCaptured();
         int agent1Carry = agent1.GetComponent<MyAgent>().GetCarrying();
         int agent2Carry = agent2.GetComponent<MyAgent>().GetCarrying();
         float agent1BaseDist = agent1.GetComponent<MyAgent>().DistanceToBase();
@@ -121,7 +121,7 @@ public class FinalStageManager : MonoBehaviour
         base1.GetComponent<HomeBase>().Reset();
         foreach (GameObject target in targets)
         {
-            target.GetComponent<Target>().resetGame();
+            target.GetComponent<Target>().ResetGame();
         }
         
         agent1.GetComponent<MyAgent>().EndEpisode();

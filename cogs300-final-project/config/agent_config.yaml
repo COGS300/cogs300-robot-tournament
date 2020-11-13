@@ -29,12 +29,12 @@ behaviors:
         strength: 0.02
         gamma: 0.99
         encoding_size: 256
-      gail:
-        strength: 0.1
-        gamma: 0.9
-        demo_path: Assets/Demonstrations/EricAutoBallTest_0.demo
-        encoding_size: 64
-        use_actions: true
+    #  gail:
+    #    strength: 0.1
+    #   gamma: 0.9
+    #    demo_path: Assets/Demonstrations/EricAutoBallTest_0.demo
+    #   encoding_size: 64
+    #    use_actions: true
 
     self_play:
       window: 10

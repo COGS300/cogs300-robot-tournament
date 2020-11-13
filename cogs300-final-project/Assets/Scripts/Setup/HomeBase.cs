@@ -6,15 +6,18 @@ public class HomeBase : MonoBehaviour
 {
     // Start is called before the first frame update
     public int team;
-    public int numInBase;
-    public GameObject player;
+    private GameObject player;
 
-    public List<Vector3> positionsInBase = new List<Vector3>();
-    public List<bool> openSpots = new List<bool>();
+    private List<Vector3> positionsInBase = new List<Vector3>();
+    private List<bool> openSpots = new List<bool>();
+    private List<GameObject> capturedTargets;
+    private GameObject[] players;
 
     void Start()
     {
-        //team = player.GetComponent<MyAgent>().team;
+        players = GameObject.FindGameObjectsWithTag("Player");
+
+        player = players[team - 1];
 
         for (int i = 0; i < 9; i++){
             openSpots.Add(true);
@@ -52,6 +55,7 @@ public class HomeBase : MonoBehaviour
             mat = (Material) Resources.Load<Material>(WorldConstants.agent2ID + "/HomeBaseMat"); 
         }
         gameObject.GetComponentInChildren<Renderer>().material = mat;
+        capturedTargets = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -61,13 +65,13 @@ public class HomeBase : MonoBehaviour
     }
 
     public void Reset(){
-        numInBase = 0;
         for (int i = 0; i < 9; i++){
             openSpots[i] = true;
         }
+        capturedTargets.Clear();
     }
 
-    public int addToFirstSpotInBase(){
+    public int AddToFirstSpotInBase(){
         for (int i = 0; i < 9; i++){
                 if(openSpots[i]){
                     openSpots[i] = false;
@@ -77,25 +81,37 @@ public class HomeBase : MonoBehaviour
         return -1;
     }
 
-    public Vector3 getPosition(int i){
+    public Vector3 GetPosition(int i){
         return positionsInBase[i];
     }
 
     void OnTriggerEnter(Collider collision){
-        if(collision.gameObject.CompareTag("Target")){ 
-            
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            MyAgent player = collision.gameObject.GetComponent<MyAgent>();
+            if (player.GetTeam() == team){
+            for (int i = player.GetCarrying() - 1; i > -1; i--)
+                {
+                    GameObject currentTarget = player.GetCarry(i);
+                    capturedTargets.Add(currentTarget);
+                    int spot = AddToFirstSpotInBase();
+                    Vector3 position = GetPosition(spot);
+                    currentTarget.GetComponent<Target>().AddToBase(spot, team, position);
+                    player.RemoveCarry(currentTarget);
+
+                }
+            }
         }
     }
     void OnTriggerExit(Collider collision){
          if(collision.gameObject.CompareTag("Target")){ 
-            player.GetComponent<MyAgent>().capturedTargets.Remove(collision.gameObject);
-            openSpots[collision.gameObject.GetComponent<Target>().spotInBase] = true;
-            numInBase--;
-             
+            capturedTargets.Remove(collision.gameObject);
+            openSpots[collision.gameObject.GetComponent<Target>().GetSpotInBase()] = true;             
          }
-         if (numInBase < 0){
-             numInBase = 0;
-         }
+
          
     }
+
+    // --------------GETTERS----------------
+    public int GetCaptured() {return capturedTargets.Count;}
 }

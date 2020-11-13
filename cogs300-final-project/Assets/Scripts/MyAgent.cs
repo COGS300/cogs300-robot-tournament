@@ -24,8 +24,8 @@ public class MyAgent : CogsAgent
 
         foreach (GameObject target in targets){
             sensor.AddObservation(target.transform.localPosition);
-            sensor.AddObservation(target.GetComponent<Target>().carried);
-            sensor.AddObservation(target.GetComponent<Target>().inBase);
+            sensor.AddObservation(target.GetComponent<Target>().GetCarried());
+            sensor.AddObservation(target.GetComponent<Target>().GetInBase());
         }
 
         sensor.AddObservation(enemy.transform.localPosition);
@@ -39,24 +39,7 @@ public class MyAgent : CogsAgent
     public override void OnActionReceived(float[] act)
     {
         AddReward(-0.0005f);
-
-        // bool frozen = IsFrozen();
-        // float frozenTime = GetFrozenTime();
-        // if (Time.time > frozenTime + 4f && frozen)
-        // {
-        //     frozen = false;
-        // }
-
-            int numCarry = 0;
-            float xCo = this.transform.localPosition.x;
-            float zCo = this.transform.localPosition.z;
-            foreach (GameObject target in carriedTargets)
-            {
-                numCarry++;
-                target.transform.localPosition = new Vector3(xCo, numCarry * 1.2f, zCo);
-            }
-
-            movePlayer((int)act[0], (int)act[1], (int)act[2], (int)act[3], (int)act[4]);
+        movePlayer((int)act[0], (int)act[1], (int)act[2], (int)act[3], (int)act[4]);
 
     }
 
@@ -136,7 +119,7 @@ public class MyAgent : CogsAgent
         base.OnCollisionEnter(collision);
 
 
-        if (collision.gameObject.CompareTag("Target") && collision.gameObject.GetComponent<Target>().inBase != GetTeam() && collision.gameObject.GetComponent<Target>().carried == 0 && !IsFrozen())
+        if (collision.gameObject.CompareTag("Target") && collision.gameObject.GetComponent<Target>().GetInBase() != GetTeam() && collision.gameObject.GetComponent<Target>().GetCarried() == 0 && !IsFrozen())
         {
             SetReward(0.5f);
         }

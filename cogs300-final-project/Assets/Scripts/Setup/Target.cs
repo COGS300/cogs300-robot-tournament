@@ -4,24 +4,33 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    public int carried;
-    public int inBase;
+    private int carried;
+    private int inBase;
 
-    Vector3 base1co = new Vector3 (25f, 0f, 25f);
-    Vector3 base2co = new Vector3 (-25f, 0f, -25f);
+    Vector3 base1co;
+    Vector3 base2co;
     Vector3 startingCo;
 
     Vector3 positionInBase = Vector3.zero;
 
-    public int spotInBase;
+    protected GameObject[] players;
+    protected GameObject[] bases;
+
+    private float yPos = 0.5f;
+
+    private int spotInBase;
     Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        setMass(0);
+        SetMass(0);
         startingCo = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z);
+        players = GameObject.FindGameObjectsWithTag("Player");
+        bases = GameObject.FindGameObjectsWithTag("HomeBase");
+        base1co = bases[0].transform.localPosition;
+        base2co = bases[1].transform.localPosition;
     }
 
     // Update is called once per frame
@@ -41,33 +50,33 @@ public class Target : MonoBehaviour
         if(carried == 0 && inBase != 0){
             this.transform.localPosition = positionInBase;
         }
-        // if(inBase == 1 && carried == 0){
-        //     this.transform.localPosition = new Vector3 (base1co.x, (spotInBase * 1.1f) - 0.5f, base1co.z);
-        // }
-        // else if (inBase == 2 && carried == 0){
-        //     this.transform.localPosition = new Vector3 (base2co.x, (spotInBase * 1.1f) - 0.5f, base2co.z);
+
+        // if (carried != 0){
+        //     GameObject player = players[carried - 1];
+        //     float playerX = player.transform.localPosition.x;
+        //     float playerZ = player.transform.localPosition.z;
+        //     this.transform.localPosition = new Vector3(playerX, yPos, playerZ);
         // }
 
     }
 
-    public void setMass(float mass){
-        rb.mass = mass;
-    }
 
-    public void zeroRotation(){
+
+    public void ZeroRotation(){
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
     }
 
-    public void explode(){
-        setMass(1);
+    public void Explode(){
+        SetMass(1);
+        SetCarry(0);
         rb.velocity = new Vector3(Random.Range(-10f, 10f), 1, Random.Range(-10f, 10f));
         rb.angularVelocity = Vector3.zero;
     }
     void OnCollisionEnter(Collision collision){
         if(collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player")){
-            zeroRotation();
-            setMass(0);
+            ZeroRotation();
+            SetMass(0);
         }
     }
 
@@ -81,48 +90,43 @@ public class Target : MonoBehaviour
          
      }
 
-    public void addToBase(int spot, int playerTeam, Vector3 position){
-        inBase = playerTeam;
-        carried = 0;
+    public void AddToBase(int spot, int playerTeam, Vector3 position){
+        SetInBase(playerTeam);
+        SetCarry(0);
         positionInBase = position;
-        spotInBase = spot;
-        //spotInBase = amountInBase;
-        // if(playerTeam == 1){
-        //     this.transform.localPosition = new Vector3 (base1co.x, (spotInBase * 1.1f) - 0.5f, base1co.z);
-        // }
-        // else{
-        //     this.transform.localPosition = new Vector3 (base2co.x, (spotInBase * 1.1f) - 0.5f, base2co.z);
-        // }
-
-     }
-
-     public void addToSpotInbase(int spot, Vector3 position){
-         positionInBase = position;
-         spotInBase = spot;
-         Debug.Log(positionInBase);
-         Debug.Log(spotInBase);
-     }
-
-     public void resetGame(){
-        transform.localPosition = startingCo;
-        zeroRotation();
-        carried = 0;
-        inBase = 0;
-        spotInBase = 0;
-
+        SetSpotInBase(spot);
+        ZeroRotation();
      }
 
      public void Carry(int team){
-         carried = team;
+         SetCarry(team);
+         SetMass(0);
+         ZeroRotation();
      }
 
-     public void adjustSpotInBase(){
-        //  spotInBase--;
-        //  if(inBase == 1){
-        //     this.transform.localPosition = new Vector3 (base1co.x, (spotInBase * 1.1f) - 0.5f, base1co.z);
-        // }
-        // else{
-        //     this.transform.localPosition = new Vector3 (base1co.z, (spotInBase * 1.1f) - 0.5f, base1co.z);
-        // }
+     public void AddToSpotInbase(int spot, Vector3 position){
+         positionInBase = position;
+         spotInBase = spot;
      }
+
+     public void ResetGame(){
+        transform.localPosition = startingCo;
+        ZeroRotation();
+        SetCarry(0);
+        SetInBase(0);
+        SetSpotInBase(0);
+     }
+    // --------------GETTERS----------------
+
+    public int GetCarried(){return carried;}
+    public int GetInBase(){return inBase;}
+    public int GetSpotInBase(){return spotInBase;}
+
+
+    // --------------SETTERS----------------
+    public void SetCarry(int team){carried = team;}
+    public void SetMass(float mass){rb.mass = mass;}
+    public void SetInBase(int baseNum){inBase = baseNum;}
+    public void SetSpotInBase(int spot){spotInBase = spot;}
+    public void SetYPos(float y){yPos = y;}
 }
