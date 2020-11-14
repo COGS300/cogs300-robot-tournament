@@ -48,12 +48,7 @@ public class HomeBase : MonoBehaviour
         }
 
         Material mat;
-        if (team == 1) {
-            mat = (Material) Resources.Load<Material>(WorldConstants.agent1ID + "/HomeBaseMat"); 
-        }
-        else {
-            mat = (Material) Resources.Load<Material>(WorldConstants.agent2ID + "/HomeBaseMat"); 
-        }
+        mat = (Material) Resources.Load<Material>(player.name + "/Resources/HomeBaseMat"); 
         gameObject.GetComponentInChildren<Renderer>().material = mat;
         capturedTargets = new List<GameObject>();
     }
@@ -88,16 +83,18 @@ public class HomeBase : MonoBehaviour
     void OnTriggerEnter(Collider collision){
         if (collision.gameObject.CompareTag("Player"))
         {
-            MyAgent player = collision.gameObject.GetComponent<MyAgent>();
-            if (player.GetTeam() == team){
-            for (int i = player.GetCarrying() - 1; i > -1; i--)
+            GameObject player = collision.gameObject;
+
+            CogsAgent agentScript = player.GetComponent(player.name) as CogsAgent;
+            if (agentScript.GetTeam() == team){
+            for (int i = agentScript.GetCarrying() - 1; i > -1; i--)
                 {
-                    GameObject currentTarget = player.GetCarry(i);
+                    GameObject currentTarget = agentScript.GetCarry(i);
                     capturedTargets.Add(currentTarget);
                     int spot = AddToFirstSpotInBase();
                     Vector3 position = GetPosition(spot);
                     currentTarget.GetComponent<Target>().AddToBase(spot, team, position);
-                    player.RemoveCarry(currentTarget);
+                    agentScript.RemoveCarry(currentTarget);
 
                 }
             }

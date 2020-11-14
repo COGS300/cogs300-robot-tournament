@@ -20,11 +20,23 @@ public class FinalStageManager : MonoBehaviour
 
 
     GameObject[] targets;
+    GameObject[] players;
+
+    CogsAgent agent1Script;
+    CogsAgent agent2Script;
+
     void Start()
     {
         targets = GameObject.FindGameObjectsWithTag("Target");
+        players = GameObject.FindGameObjectsWithTag("Player"); 
+
+        agent1 = players[0];
+        agent2 = players[1];
+
 
         winnerTextbox.enabled = false;
+        agent1Script = agent1.GetComponent(agent1.name) as CogsAgent;
+        agent2Script = agent2.GetComponent(agent2.name) as CogsAgent;
     }
 
 
@@ -33,12 +45,15 @@ public class FinalStageManager : MonoBehaviour
     { 
         bool timerIsRunning = timer.GetComponent<Timer>().GetTimerIsRunning();
         
+        //int agent2Carry = agent2.GetComponent<MyAgent>().GetCarrying(); -> cannot access this way anymore!!!
+
         int base1Num = base1.GetComponent<HomeBase>().GetCaptured();
         int base2Num = base2.GetComponent<HomeBase>().GetCaptured();
-        int agent1Carry = agent1.GetComponent<MyAgent>().GetCarrying();
-        int agent2Carry = agent2.GetComponent<MyAgent>().GetCarrying();
-        float agent1BaseDist = agent1.GetComponent<MyAgent>().DistanceToBase();
-        float agent2BaseDist = agent1.GetComponent<MyAgent>().DistanceToBase();
+        int agent1Carry = agent1Script.GetCarrying();
+        int agent2Carry = agent2Script.GetCarrying();
+
+        float agent1BaseDist = agent1Script.DistanceToBase();
+        float agent2BaseDist = agent2Script.DistanceToBase();
 
         base1CountTxt.text = WorldConstants.agent1ID + ": " + base1Num.ToString();
         base2CountTxt.text = WorldConstants.agent2ID + ": " + base2Num.ToString();
@@ -47,8 +62,8 @@ public class FinalStageManager : MonoBehaviour
         {
             if (base1Num > base2Num)
             {
-                agent1.GetComponent<MyAgent>().SetReward(1f);
-                agent2.GetComponent<MyAgent>().SetReward(-1f);
+                agent1Script.SetReward(1f);
+                agent2Script.SetReward(-1f);
                 Debug.Log("Agent 1 wins by capture");
                 winnerTextbox.enabled = true;
                 winnerTextbox.text = "Agent 1 wins";
@@ -56,16 +71,16 @@ public class FinalStageManager : MonoBehaviour
             
             else if (base2Num > base1Num)
             {
-                agent1.GetComponent<MyAgent>().SetReward(-1f);
-                agent2.GetComponent<MyAgent>().SetReward(1f);
+                agent1Script.SetReward(-1f);
+                agent2Script.SetReward(1f);
                 Debug.Log("Agent 2 wins by capture");                
                 winnerTextbox.enabled = true;
                 winnerTextbox.text = "Agent 2 wins";
             }
             else if (agent1Carry > agent2Carry)
             {
-                agent1.GetComponent<MyAgent>().SetReward(1f);
-                agent2.GetComponent<MyAgent>().SetReward(-1f);
+                agent1Script.SetReward(1f);
+                agent2Script.SetReward(-1f);
                 Debug.Log("Agent 1 wins by carry");
                 winnerTextbox.enabled = true;
                 winnerTextbox.text = "Agent 1 wins";
@@ -73,16 +88,16 @@ public class FinalStageManager : MonoBehaviour
             
             else if (agent2Carry > agent1Carry)
             {
-                agent1.GetComponent<MyAgent>().SetReward(-1f);
-                agent2.GetComponent<MyAgent>().SetReward(1f);
+                agent1Script.SetReward(-1f);
+                agent2Script.SetReward(1f);
                 Debug.Log("Agent 2 wins by carry");                
                 winnerTextbox.enabled = true;
                 winnerTextbox.text = "Agent 2 wins";
             }
             else if (agent1BaseDist < agent2BaseDist && agent1Carry != 0)
             {
-                agent1.GetComponent<MyAgent>().SetReward(1f);
-                agent2.GetComponent<MyAgent>().SetReward(-1f);
+                agent1Script.SetReward(1f);
+                agent2Script.SetReward(-1f);
                 Debug.Log("Agent 1 wins by distance");
                 winnerTextbox.enabled = true;
                 winnerTextbox.text = "Agent 1 wins";
@@ -90,16 +105,16 @@ public class FinalStageManager : MonoBehaviour
             
             else if (agent2BaseDist < agent1BaseDist && agent2Carry != 0)
             {
-                agent1.GetComponent<MyAgent>().SetReward(-1f);
-                agent2.GetComponent<MyAgent>().SetReward(1f);
+                agent1Script.SetReward(-1f);
+                agent2Script.SetReward(1f);
                 Debug.Log("Agent 2 wins by distance");                
                 winnerTextbox.enabled = true;
                 winnerTextbox.text = "Agent 2 wins";
             }
             
             else {
-                agent1.GetComponent<MyAgent>().SetReward(0f);
-                agent2.GetComponent<MyAgent>().SetReward(0f);
+                agent1Script.SetReward(0f);
+                agent2Script.SetReward(0f);
                 Debug.Log("Draw!");
 
                 winnerTextbox.enabled = true;
@@ -119,13 +134,14 @@ public class FinalStageManager : MonoBehaviour
     void Reset() {
         timer.GetComponent<Timer>().Reset();
         base1.GetComponent<HomeBase>().Reset();
+        base2.GetComponent<HomeBase>().Reset();
         foreach (GameObject target in targets)
         {
             target.GetComponent<Target>().ResetGame();
         }
         
-        agent1.GetComponent<MyAgent>().EndEpisode();
-        agent2.GetComponent<MyAgent>().EndEpisode();
+        agent1Script.EndEpisode();
+        agent2Script.EndEpisode();
     }
 
     void StopGame() {

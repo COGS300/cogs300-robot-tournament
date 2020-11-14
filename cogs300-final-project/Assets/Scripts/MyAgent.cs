@@ -28,9 +28,9 @@ public class MyAgent : CogsAgent
             sensor.AddObservation(target.GetComponent<Target>().GetInBase());
         }
 
-        sensor.AddObservation(enemy.transform.localPosition);
-        sensor.AddObservation(enemy.transform.rotation.y);
-        sensor.AddObservation(enemy.GetComponent<CogsAgent>().IsFrozen());
+        //sensor.AddObservation(enemy.transform.localPosition);
+        //sensor.AddObservation(enemy.transform.rotation.y);
+        //sensor.AddObservation(enemy.GetComponent<CogsAgent>().IsFrozen());
 
         sensor.AddObservation(IsFrozen());
     }
@@ -39,7 +39,9 @@ public class MyAgent : CogsAgent
     public override void OnActionReceived(float[] act)
     {
         AddReward(-0.0005f);
-        movePlayer((int)act[0], (int)act[1], (int)act[2], (int)act[3], (int)act[4]);
+        int forwardAxis = (int)act[0]; //NN output 0
+
+        movePlayer(forwardAxis, (int)act[1], (int)act[2], (int)act[3], (int)act[4]);
 
     }
 

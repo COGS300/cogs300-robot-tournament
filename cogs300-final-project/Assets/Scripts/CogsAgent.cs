@@ -109,7 +109,7 @@ public class CogsAgent : Agent
             }
         }
         
-        if (gameObject.name == "Agent 1") {
+        if (transform.parent.name == "Agent 1") {
             team = 1;
         }
         else team = 2;
@@ -124,14 +124,9 @@ public class CogsAgent : Agent
         //capturedTargets = new List<GameObject>();
         carriedTargets = new List<GameObject>();
 
-        Material mat;
-        if (team == 1) {
-            mat = (Material) Resources.Load<Material>(WorldConstants.agent1ID + "/AgentMat"); 
-        }
-        else {
-            mat = (Material) Resources.Load<Material>(WorldConstants.agent2ID + "/AgentMat"); 
-        }
-        gameObject.GetComponent<Renderer>().material = mat;
+        // Material mat;
+        // mat = (Material) Resources.Load<Material>("AgentMat"); 
+    
     }
     
     protected virtual void FixedUpdate() {
