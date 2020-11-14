@@ -2,8 +2,11 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - CameraControls
-    - CogsAgent
+    - FinalStageManager
     - HomeBase
+    - MyGroupName
+    - TA_Example_1
+    - TA_Example_2
     - Target
     - Timer
     Unity.ML-Agents.dll:
@@ -24,7 +27,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/FinalStage.unity:
+    Assets/Scenes/AgentTraining.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -58,35 +61,39 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11268}
+      Script: {instanceID: 11314}
     - Class: 114
-      Script: {instanceID: 11520}
+      Script: {instanceID: 11356}
     - Class: 114
-      Script: {instanceID: 11666}
+      Script: {instanceID: 11568}
     - Class: 114
-      Script: {instanceID: 11746}
+      Script: {instanceID: 11714}
     - Class: 114
-      Script: {instanceID: 12132}
+      Script: {instanceID: 11794}
     - Class: 114
-      Script: {instanceID: 12158}
+      Script: {instanceID: 11962}
     - Class: 114
-      Script: {instanceID: 12440}
+      Script: {instanceID: 12182}
+    - Class: 114
+      Script: {instanceID: 12202}
+    - Class: 114
+      Script: {instanceID: 12210}
     - Class: 114
       Script: {instanceID: 12492}
     - Class: 114
-      Script: {instanceID: 12494}
+      Script: {instanceID: 12544}
     - Class: 114
-      Script: {instanceID: 12576}
+      Script: {instanceID: 12626}
     - Class: 114
-      Script: {instanceID: 13246}
+      Script: {instanceID: 13296}
     - Class: 114
-      Script: {instanceID: 13488}
+      Script: {instanceID: 13536}
     - Class: 114
-      Script: {instanceID: 13830}
+      Script: {instanceID: 13662}
     - Class: 114
-      Script: {instanceID: 14016}
+      Script: {instanceID: 13878}
     - Class: 114
-      Script: {instanceID: 15192}
+      Script: {instanceID: 14064}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -118,6 +125,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_SelectionCaret
+  - hash:
+      serializedVersion: 2
+      Hash: 5d470960c5db2f9c229c37ff99d0996e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TA_Example_1
   - hash:
       serializedVersion: 2
       Hash: 87ff43d2baf3385cba327d8f803a4ebb
@@ -270,6 +283,12 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
+      Hash: 5d470960c5db2f9c229c37ff99d0996e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TA_Example_2
+  - hash:
+      serializedVersion: 2
       Hash: 5ab533713adae59372fb3e10a585c186
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -298,6 +317,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Timer
+  - hash:
+      serializedVersion: 2
+      Hash: 5d470960c5db2f9c229c37ff99d0996e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MyGroupName
   - hash:
       serializedVersion: 2
       Hash: cc4274b586df3c02688bac01b88bd16c
@@ -342,19 +367,13 @@ ScriptsOnlyBuild:
     className: ScrollRect
   - hash:
       serializedVersion: 2
-      Hash: f359f2ff9733d9dd5e43f3cdcaf9a216
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: AgentManager
-  - hash:
-      serializedVersion: 2
       Hash: 5d470960c5db2f9c229c37ff99d0996e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CogsAgent
   - hash:
       serializedVersion: 2
-      Hash: 2084038ffb749d8ada1a70f8df8cb3c4
+      Hash: 663b082c33cdc214461587dac5579dc6
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: HomeBase
@@ -522,7 +541,7 @@ ScriptsOnlyBuild:
     className: BeforeAfterTestCommandState
   - hash:
       serializedVersion: 2
-      Hash: 6e073540ba2031f02d8106e7783c1207
+      Hash: 8616de875266bc818c8edb7244ca9418
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: FinalStageManager
@@ -642,6 +661,6 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   platform: 19
   scenePathNames:
-  - Assets/Scenes/FinalStage.unity
+  - Assets/Scenes/AgentTraining.unity
   playerPath: C:/Cogs300 Lab Dev/cogs300-final-project-github/cogs300-robot-tournament/cogs300-final-project/Build/TeachingBuild/Final
     Project Testing V2.exe

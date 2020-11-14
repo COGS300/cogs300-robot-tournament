@@ -24,7 +24,7 @@ public class CogsAgent : Agent
     // - GetCaptured(): get the number of captured targets
 
     protected Transform baseLocation; 
-    private int team; 
+    protected int team; 
     
     protected GameObject[] targets; // list of all targets in the environment
     // Accessible for each target:
@@ -224,21 +224,6 @@ public class CogsAgent : Agent
 
             return false;
         }
-    }
-
-    // return reference to nearest target
-    protected GameObject getNearestTarget(){
-        float distance = 200;
-        GameObject nearestTarget = null;
-        foreach (var target in targets)
-        {
-            float currentDistance = Vector3.Distance(target.transform.localPosition, transform.localPosition);
-            if (currentDistance < distance && target.GetComponent<Target>().GetCarried() == 0 && target.GetComponent<Target>().GetInBase() != team){
-                distance = currentDistance;
-                nearestTarget = target;
-            }
-        }
-        return nearestTarget;
     }
 
     // return the distance from the agent and the home base

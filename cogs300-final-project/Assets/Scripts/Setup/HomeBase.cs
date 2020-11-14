@@ -46,15 +46,15 @@ public class HomeBase : MonoBehaviour
             positionsInBase.Reverse();
         }
         
-        if (!training) {
-            Material mat;
-            string id;
-            if (team == 1) id = WorldConstants.agent1ID;
-            else id = WorldConstants.agent2ID;
 
-            mat = (Material) Resources.Load<Material>(id + "/Resources/HomeBaseMat"); 
-            gameObject.GetComponentInChildren<Renderer>().material = mat;
-        }
+        Material mat;
+        string id;
+        if (team == 1) id = WorldConstants.agent1ID;           
+        else id = WorldConstants.agent2ID;
+
+        mat = (Material) Resources.Load<Material>(id + "/Resources/HomeBaseMat"); 
+        gameObject.GetComponentInChildren<Renderer>().material = mat;
+        
 
         capturedTargets = new List<GameObject>();
         

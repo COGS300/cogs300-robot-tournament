@@ -28,10 +28,6 @@ public class TA_Example_1 : CogsAgent
             sensor.AddObservation(target.GetComponent<Target>().GetInBase());
         }
 
-        // sensor.AddObservation(enemy.transform.localPosition);
-        // sensor.AddObservation(enemy.transform.rotation.y);
-        // sensor.AddObservation(enemy.GetComponent<CogsAgent>().IsFrozen());
-
         sensor.AddObservation(IsFrozen());
     }
 
@@ -231,6 +227,21 @@ public class TA_Example_1 : CogsAgent
         else {
             dirToGo = transform.forward;
         }
+    }
+
+    // return reference to nearest target
+    protected GameObject getNearestTarget(){
+        float distance = 200;
+        GameObject nearestTarget = null;
+        foreach (var target in targets)
+        {
+            float currentDistance = Vector3.Distance(target.transform.localPosition, transform.localPosition);
+            if (currentDistance < distance && target.GetComponent<Target>().GetCarried() == 0 && target.GetComponent<Target>().GetInBase() != team){
+                distance = currentDistance;
+                nearestTarget = target;
+            }
+        }
+        return nearestTarget;
     }
 
     private float getYAngle(GameObject target) {

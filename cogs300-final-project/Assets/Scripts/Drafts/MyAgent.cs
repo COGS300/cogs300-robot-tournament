@@ -69,9 +69,13 @@ public class MyAgent : CogsAgent
     {
         AddReward(-0.0005f);
         int forwardAxis = (int)act[0]; //NN output 0
+        int rotateAxis = (int)act[1];
+        int shootAxis = (int)act[2]; 
+        int goToTargetAxis = (int)act[3]; 
+        int goToBaseAxis = (int)act[4];
 
         // Call movePlayer helper to handle the various cases based on brain output
-        movePlayer(forwardAxis, (int)act[1], (int)act[2], (int)act[3], (int)act[4]);
+        movePlayer(forwardAxis, rotateAxis, shootAxis, goToTargetAxis, goToBaseAxis);
 
     }
 
@@ -79,25 +83,36 @@ public class MyAgent : CogsAgent
     public override void Heuristic(float[] actionsOut)
     {
         // Overrides brain output with value based on keyboard input
+        // forwardAxis -> [0] 
+        // rotateAxis -> [1]
+        // shootAxis -> [2]; 
+        // goToTargetAxis -> [3]; 
+        // goToBaseAxis -> [4];
+
+
         var discreteActionsOut = actionsOut;
         discreteActionsOut[0] = 0;
         discreteActionsOut[1] = 0;
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            discreteActionsOut[1] = 2;
-        }
+        
         if (Input.GetKey(KeyCode.UpArrow))
         {
             discreteActionsOut[0] = 1;
-        }
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            discreteActionsOut[1] = 1;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
             discreteActionsOut[0] = 2;
         }
+
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            discreteActionsOut[1] = 2;
+        }
+        
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            discreteActionsOut[1] = 1;
+        }
+       
 
         discreteActionsOut[2] = Input.GetKey(KeyCode.Space) ? 1 : 0;
 
@@ -108,8 +123,7 @@ public class MyAgent : CogsAgent
 
 
 
-    // ----------------------ONTRIGGER AND ONCOLLISION FUNCTIONS------------------------
-    // Called when object collides with or trigger (similar to collide but without physics) other objects
+    
 
     protected override void OnTriggerEnter(Collider collision)
     {
@@ -161,24 +175,42 @@ public class MyAgent : CogsAgent
         rotateDir = Vector3.zero;
         SetLaser(false);
 
-        switch (forwardAxis)
-        {
-            case 0: break; //do nothing
-            case 1: dirToGo = transform.forward; break;
-            case 2: dirToGo = -transform.forward; break;
+        Vector3 forward = transform.forward;
+        Vector3 backward = -transform.forward;
+        Vector3 right = transform.up;
+        Vector3 left = -transform.up;
+
+        //fowardAxis: 
+            // 0 -> do nothing
+            // 1 -> go forward
+            // 2 -> go backward
+        if (forwardAxis == 0){
+            //do nothing
         }
-        switch (rotateAxis)
-        {
-            case 0: break; //do nothing
-            case 1: rotateDir = -transform.up; break;
-            case 2: rotateDir = transform.up; break;
+        else if (forwardAxis == 1){
+            dirToGo = forward;
+        }
+        else if (forwardAxis == 2){
+            //TODO: Go backward
         }
 
-        switch (shootAxis)
-        {
-            case 0: break; //do nothing 
-            case 1: SetLaser(true); break;
+        //rotateAxis: 
+            // 0 -> do nothing
+            // 1 -> go forward
+            // 2 -> go backward
+        if (rotateAxis == 0){
+            //do nothing
         }
+        //TODO: Implement the other cases for rotateDir
+
+
+        if (shootAxis == 0){
+            //do nothing
+        }
+        else if (shootAxis == 1){
+            SetLaser(true);
+        }
+
         
          switch (goToTargetAxis)
         {
@@ -195,14 +227,14 @@ public class MyAgent : CogsAgent
 
     // Go to home base
     private void goToBase(){
-        turnAndGo(getYAngle(myBase));
+        turnAndGo(getYAngleToObject(myBase));
     }
 
     // Go to the nearest target
     private void goToNearestTarget(){
         GameObject target = getNearestTarget();
         if (target != null){
-            float rotation = getYAngle(target);
+            float rotation = getYAngleToObject(target);
             turnAndGo(rotation);
         }        
     }
@@ -221,13 +253,29 @@ public class MyAgent : CogsAgent
         }
     }
 
-    // ???
-    private float getYAngle(GameObject target) {
+    // return reference to nearest target
+    protected GameObject getNearestTarget(){
+        float distance = 200;
+        GameObject nearestTarget = null;
+        foreach (var target in targets)
+        {
+            float currentDistance = Vector3.Distance(target.transform.localPosition, transform.localPosition);
+            if (currentDistance < distance && target.GetComponent<Target>().GetCarried() == 0 && target.GetComponent<Target>().GetInBase() != team){
+                distance = currentDistance;
+                nearestTarget = target;
+            }
+        }
+        return nearestTarget;
+    }
+
+    // Returns difference between agent rotation and direction to object as a +/- angle
+    // (Tells you how to rotate to face a given object)
+    private float getYAngleToObject(GameObject obj) {
         
-       Vector3 targetDir = target.transform.position - transform.position;
+       Vector3 objDir = obj.transform.position - transform.position;
        Vector3 forward = transform.forward;
 
-      float angle = Vector3.SignedAngle(targetDir, forward, Vector3.up);
+      float angle = Vector3.SignedAngle(objDir, forward, Vector3.up);
       return angle; 
         
     }

@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
-  m_BehaviorName: Example1
+  m_BehaviorName: Agent
   TeamId: 0
   m_UseChildSensors: 0
   m_UseChildActuators: 1
@@ -425,7 +425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Record: 0
   NumStepsToRecord: 0
-  DemonstrationName: 
+  DemonstrationName: EricNov14
   DemonstrationDirectory: 
 --- !u!1 &5906971177790659087
 GameObject:
