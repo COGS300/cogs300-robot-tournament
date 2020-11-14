@@ -14,9 +14,7 @@ public class Timer : MonoBehaviour
 
 
 
-
     void Start(){
-        //reset();
         timeRemaining = timeLimit;
         timerIsRunning = true;
 
@@ -47,12 +45,14 @@ public class Timer : MonoBehaviour
         
     }
 
-
     public void Reset(){
         timeRemaining = timeLimit;
         timerIsRunning = true;
     }
     
+
+
+    // -------------GETTERS----------------
     public float GetTimeRemaning() {
         return timeRemaining;
     }

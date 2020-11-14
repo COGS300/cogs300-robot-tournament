@@ -28,9 +28,9 @@ public class TA_Example_2 : CogsAgent
             sensor.AddObservation(target.GetComponent<Target>().GetInBase());
         }
 
-        // sensor.AddObservation(enemy.transform.localPosition);
-        // sensor.AddObservation(enemy.transform.rotation.y);
-        // sensor.AddObservation(enemy.GetComponent<CogsAgent>().IsFrozen());
+        //sensor.AddObservation(enemy.transform.localPosition);
+        //sensor.AddObservation(enemy.transform.rotation.y);
+        //sensor.AddObservation(enemy.GetComponent<CogsAgent>().IsFrozen());
 
         sensor.AddObservation(IsFrozen());
     }
@@ -151,10 +151,10 @@ public class TA_Example_2 : CogsAgent
             case 0: //do nothing
                 break;
             case 1:
-                dirToGo = -transform.forward;
+                dirToGo = transform.forward;
                 break;
             case 2:
-                dirToGo = transform.forward;
+                dirToGo = -transform.forward;
                 break;
         }
         switch (rotateAxis)
@@ -235,5 +235,3 @@ public class TA_Example_2 : CogsAgent
         
     }
 }
-
-

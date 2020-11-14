@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 285995338192882885}
   m_Layer: 0
-  m_Name: Laser 2
+  m_Name: Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3749629776681319539}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa8e1e87e5618c149932c43afd97a6f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 254b8a93e50e92345be94307d6592b53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agentParameters:

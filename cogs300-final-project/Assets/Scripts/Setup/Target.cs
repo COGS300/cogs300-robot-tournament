@@ -4,22 +4,20 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    private int carried;
-    private int inBase;
+    private int carried, inBase;
 
-    Vector3 base1co;
-    Vector3 base2co;
-    Vector3 startingCo;
+    Vector3 base1co, base2co, startingCo;
 
     Vector3 positionInBase = Vector3.zero;
 
-    protected GameObject[] players;
-    protected GameObject[] bases;
+    protected GameObject[] players, bases;
 
     private float yPos = 0.5f;
 
     private int spotInBase;
     Rigidbody rb;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -51,16 +49,7 @@ public class Target : MonoBehaviour
             this.transform.localPosition = positionInBase;
         }
 
-        // if (carried != 0){
-        //     GameObject player = players[carried - 1];
-        //     float playerX = player.transform.localPosition.x;
-        //     float playerZ = player.transform.localPosition.z;
-        //     this.transform.localPosition = new Vector3(playerX, yPos, playerZ);
-        // }
-
     }
-
-
 
     public void ZeroRotation(){
         rb.velocity = Vector3.zero;
@@ -73,6 +62,7 @@ public class Target : MonoBehaviour
         rb.velocity = new Vector3(Random.Range(-10f, 10f), 1, Random.Range(-10f, 10f));
         rb.angularVelocity = Vector3.zero;
     }
+    
     void OnCollisionEnter(Collision collision){
         if(collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player")){
             ZeroRotation();
@@ -83,6 +73,7 @@ public class Target : MonoBehaviour
      void OnTriggerEnter(Collider collision){
 
      }
+     
      void OnTriggerExit(Collider collision){
          if(collision.gameObject.CompareTag("HomeBase")){ 
              inBase = 0;
@@ -116,8 +107,10 @@ public class Target : MonoBehaviour
         SetInBase(0);
         SetSpotInBase(0);
      }
-    // --------------GETTERS----------------
+    
+    
 
+    // --------------GETTERS----------------
     public int GetCarried(){return carried;}
     public int GetInBase(){return inBase;}
     public int GetSpotInBase(){return spotInBase;}

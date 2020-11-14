@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class HomeBase : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public bool training;
+    
     public int team;
     private GameObject player;
 
@@ -15,9 +16,7 @@ public class HomeBase : MonoBehaviour
 
     void Start()
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
-
-        player = players[team - 1];
+        player = GameObject.Find("Agent " + team);
 
         for (int i = 0; i < 9; i++){
             openSpots.Add(true);
@@ -46,16 +45,18 @@ public class HomeBase : MonoBehaviour
         if(team == 1){
             positionsInBase.Reverse();
         }
+        
+        if (!training) {
+            Material mat;
+            string id;
+            if (team == 1) id = WorldConstants.agent1ID;
+            else id = WorldConstants.agent2ID;
 
-        Material mat;
-        mat = (Material) Resources.Load<Material>(player.name + "/Resources/HomeBaseMat"); 
-        gameObject.GetComponentInChildren<Renderer>().material = mat;
+            mat = (Material) Resources.Load<Material>(id + "/Resources/HomeBaseMat"); 
+            gameObject.GetComponentInChildren<Renderer>().material = mat;
+        }
+
         capturedTargets = new List<GameObject>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 
@@ -76,16 +77,13 @@ public class HomeBase : MonoBehaviour
         return -1;
     }
 
-    public Vector3 GetPosition(int i){
-        return positionsInBase[i];
-    }
-
     void OnTriggerEnter(Collider collision){
         if (collision.gameObject.CompareTag("Player"))
         {
             GameObject player = collision.gameObject;
 
-            CogsAgent agentScript = player.GetComponent(player.name) as CogsAgent;
+            CogsAgent agentScript = player.GetComponent(WorldConstants.agent1ID) as CogsAgent;
+            if (agentScript == null) agentScript = player.GetComponent(WorldConstants.agent2ID) as CogsAgent;
             if (agentScript.GetTeam() == team){
             for (int i = agentScript.GetCarrying() - 1; i > -1; i--)
                 {
@@ -108,6 +106,10 @@ public class HomeBase : MonoBehaviour
 
          
     }
+
+    public Vector3 GetPosition(int i){ return positionsInBase[i];}
+
+
 
     // --------------GETTERS----------------
     public int GetCaptured() {return capturedTargets.Count;}
