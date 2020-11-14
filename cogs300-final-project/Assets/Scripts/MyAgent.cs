@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.MLAgents;
+using Unity.MLAgents.Policies;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 
@@ -76,11 +78,17 @@ public class MyAgent : CogsAgent
 
     // ----------------------OVERRIDE FUNCTIONS------------------------
     // Functions that require being defined in both CogsAgent(as virtual functions) and MyAgent
-
+    
+    void Awake() {
+        RaycastSetup();
+        BehaviorParametersSetup();
+        DecisionRequesterSetup();
+    } 
+    
     protected override void Start()
     {
         base.Start();
-
+        
         rewardDict = new Dictionary<string, float>();
 
         rewardDict.Add("frozen", -0.1f);
@@ -132,6 +140,37 @@ public class MyAgent : CogsAgent
 
 
 
+    // ------------------------SCRIPT SETUP--------------------------
+   
+    private void BehaviorParametersSetup() {
+        BehaviorParameters bpScript = gameObject.GetComponent<BehaviorParameters>();
+        
+        bpScript.BrainParameters.VectorObservationSize = 61;
+        bpScript.BrainParameters.NumStackedVectorObservations = 3;
+
+        bpScript.BrainParameters.VectorActionSpaceType = SpaceType.Discrete;
+        bpScript.BrainParameters.VectorActionSize = new[] {3, 3, 2, 2, 2};
+    }
+
+    private void DecisionRequesterSetup() {
+        DecisionRequester dr = gameObject.GetComponent<DecisionRequester>();
+
+        dr.DecisionPeriod = 3;
+        dr.TakeActionsBetweenDecisions = true; 
+    } 
+
+    private void RaycastSetup() {
+        RayPerceptionSensorComponent3D rayScript = gameObject.GetComponent<RayPerceptionSensorComponent3D>();
+
+        rayScript.RaysPerDirection = 5;
+        rayScript.MaxRayDegrees = 180f;
+        rayScript.SphereCastRadius = 0.5f;
+        rayScript.RayLength = 62f;
+        rayScript.ObservationStacks = 3;
+    }
+
+
+
     //  --------------------------HELPERS---------------------------- 
     private void movePlayer(int forwardAxis, int rotateAxis, int shootAxis, int goToTargetAxis, int goToBaseAxis)
     {
@@ -179,7 +218,7 @@ public class MyAgent : CogsAgent
         
          switch (goToTargetAxis)
         {
-             case 0: //do nothing
+            case 0: //do nothing
                 break;
             case 1:
                 goToNearestTarget();
@@ -188,7 +227,7 @@ public class MyAgent : CogsAgent
 
          switch (goToBaseAxis)
         {
-             case 0: //do nothing
+            case 0: //do nothing
                 break;
             case 1:
                 goToBase();

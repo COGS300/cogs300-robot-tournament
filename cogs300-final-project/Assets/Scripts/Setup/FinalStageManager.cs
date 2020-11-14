@@ -20,6 +20,8 @@ public class FinalStageManager : MonoBehaviour
 
 
     GameObject[] targets;
+    
+    
     void Start()
     {
         targets = GameObject.FindGameObjectsWithTag("Target");

@@ -787,7 +787,7 @@ PrefabInstance:
     - target: {fileID: 813720616347716039, guid: e73cd349ff43284418791729b55d0361,
         type: 3}
       propertyPath: m_BrainParameters.VectorActionSize.Array.size
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 813720616347716039, guid: e73cd349ff43284418791729b55d0361,
         type: 3}
@@ -813,17 +813,42 @@ PrefabInstance:
     - target: {fileID: 813720616347716039, guid: e73cd349ff43284418791729b55d0361,
         type: 3}
       propertyPath: m_BrainParameters.VectorActionSize.Array.data[2]
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 813720616347716039, guid: e73cd349ff43284418791729b55d0361,
         type: 3}
       propertyPath: m_BrainParameters.VectorActionSize.Array.data[4]
-      value: 2
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 813720616347716039, guid: e73cd349ff43284418791729b55d0361,
+        type: 3}
+      propertyPath: m_BrainParameters.VectorActionSize.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 813720616347716039, guid: e73cd349ff43284418791729b55d0361,
+        type: 3}
+      propertyPath: m_BrainParameters.VectorActionSize.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 813720616347716039, guid: e73cd349ff43284418791729b55d0361,
+        type: 3}
+      propertyPath: m_BrainParameters.VectorActionSize.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 813720616347716039, guid: e73cd349ff43284418791729b55d0361,
+        type: 3}
+      propertyPath: m_BrainParameters.VectorActionSpaceType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 825265921620300366, guid: e73cd349ff43284418791729b55d0361,
         type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 957516788049105588, guid: e73cd349ff43284418791729b55d0361,
+        type: 3}
+      propertyPath: m_ObservationStacks
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1517751625083419524, guid: e73cd349ff43284418791729b55d0361,
         type: 3}
@@ -925,8 +950,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 954d579ce2547a34fa229cb213883ce0,
-        type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 2072636047401595138, guid: e73cd349ff43284418791729b55d0361,
         type: 3}
       propertyPath: m_BrainParameters.VectorActionSize.Array.data[2]
@@ -1337,6 +1361,8 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 813720616347715645, guid: e73cd349ff43284418791729b55d0361, type: 3}
     - {fileID: 2072636047401595128, guid: e73cd349ff43284418791729b55d0361, type: 3}
+    - {fileID: 1927638927418075761, guid: e73cd349ff43284418791729b55d0361, type: 3}
+    - {fileID: 957516788049105588, guid: e73cd349ff43284418791729b55d0361, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e73cd349ff43284418791729b55d0361, type: 3}
 --- !u!4 &580301699 stripped
 Transform:
@@ -1944,6 +1970,36 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+--- !u!114 &1840142344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840142342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SensorName: RayPerceptionSensor
+  m_DetectableTags:
+  - Player
+  - Wall
+  - Target
+  - HomeBase
+  m_RaysPerDirection: 3
+  m_MaxRayDegrees: 70
+  m_SphereCastRadius: 0.5
+  m_RayLength: 20
+  m_RayLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  m_ObservationStacks: 1
+  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
+  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
+  m_StartVerticalOffset: 0
+  m_EndVerticalOffset: 0
 --- !u!4 &1840142352 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2072636047401595131, guid: e73cd349ff43284418791729b55d0361,
@@ -1972,6 +2028,36 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+--- !u!114 &1888566951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888566949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SensorName: RayPerceptionSensor
+  m_DetectableTags:
+  - Player
+  - Wall
+  - Target
+  - HomeBase
+  m_RaysPerDirection: 3
+  m_MaxRayDegrees: 70
+  m_SphereCastRadius: 0.5
+  m_RayLength: 20
+  m_RayLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  m_ObservationStacks: 1
+  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
+  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
+  m_StartVerticalOffset: 0
+  m_EndVerticalOffset: 0
 --- !u!4 &1888566959 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 813720616347715646, guid: e73cd349ff43284418791729b55d0361,

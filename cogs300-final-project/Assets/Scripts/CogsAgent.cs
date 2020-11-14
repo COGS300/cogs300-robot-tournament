@@ -4,6 +4,10 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Random = UnityEngine.Random;
+using Unity.MLAgents.Policies;
+using Unity.Barracuda;
+using UnityEngine.Networking;
+using System.IO;
 
 public class CogsAgent : Agent
 {
@@ -94,7 +98,7 @@ public class CogsAgent : Agent
 
     // ---------------VIRTUAL FUNCTIONS-----------------
     // Used for setup as well as in MyAgent
-    
+
     protected virtual void Start()
     {
         rBody = GetComponent<Rigidbody>();
@@ -132,6 +136,57 @@ public class CogsAgent : Agent
             mat = (Material) Resources.Load<Material>(WorldConstants.agent2ID + "/AgentMat"); 
         }
         gameObject.GetComponent<Renderer>().material = mat;
+        
+        
+        if (team == 1) {
+            try {
+                string path = Application.dataPath + "/Resources/" + WorldConstants.agent1ID + "/Agent.nn";
+            
+                WWW www = new WWW(path);
+                byte[] modelByte = www.bytes;
+
+                // UnityWebRequest www = new UnityWebRequest(path);
+                // byte[] modelByte = www.downloadHandler.data;
+
+                NNModel model = ScriptableObject.CreateInstance<NNModel>();
+                NNModelData nnData = ScriptableObject.CreateInstance<NNModelData>();
+                nnData.Value = modelByte;
+                model.modelData = nnData;
+
+                BehaviorParameters bpScript = gameObject.GetComponent<BehaviorParameters>();
+                bpScript.Model = model;
+            }
+            catch (EndOfStreamException) {
+                Debug.Log("No model for agent " + team);
+            }
+            
+        }
+
+        else if (team == 2) {
+            try {
+                string path = Application.dataPath + "/Resources/" + WorldConstants.agent2ID + "/Agent.nn";
+            
+                WWW www = new WWW(path);
+                byte[] modelByte = www.bytes;
+
+                // UnityWebRequest www = new UnityWebRequest(path);
+                // byte[] modelByte = www.downloadHandler.data;
+
+                NNModel model = ScriptableObject.CreateInstance<NNModel>();
+                NNModelData nnData = ScriptableObject.CreateInstance<NNModelData>();
+                nnData.Value = modelByte;
+                model.modelData = nnData;
+
+                BehaviorParameters bpScript = gameObject.GetComponent<BehaviorParameters>();
+                bpScript.Model = model;
+            }
+            catch (EndOfStreamException) {
+                Debug.Log("No model for agent " + team);
+            }
+        }
+        
+        
+
     }
     
     protected virtual void FixedUpdate() {
