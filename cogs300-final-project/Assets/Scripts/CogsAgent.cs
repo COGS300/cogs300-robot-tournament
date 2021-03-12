@@ -142,6 +142,15 @@ public class CogsAgent : Agent
 
     }
 
+    public void moveAgent(Vector3 dirToGo, Vector3 rotateDir){
+        if(!IsFrozen()){
+            if (!IsLaserOn()){
+                rBody.AddForce(dirToGo * GetMoveSpeed(), ForceMode.VelocityChange);
+            }
+            transform.Rotate(rotateDir, Time.deltaTime * GetTurnSpeed());
+        }
+    }
+
 
 
     // ---------------------GAME SETUP-----------------------
